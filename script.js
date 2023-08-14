@@ -1,41 +1,30 @@
 document.getElementById("watchButton").addEventListener("click", function() {
-  // ... (previous code)
-
-  const videoContainers = document.querySelectorAll(".video-container");
-  const videoFrames = document.querySelectorAll(".video-frame");
-
-  // Add click event listeners for each video container
-  videoContainers.forEach((container, index) => {
-    container.addEventListener("click", () => {
-      if (!container.classList.contains("zoomed")) {
-        // Zoom in
-        videoContainers.forEach(c => c.classList.remove("zoomed"));
-        container.classList.add("zoomed");
-        videoFrames.forEach(frame => frame.style.pointerEvents = "none");
-        videoFrames[index].style.pointerEvents = "auto";
-        muteAllVideosExcept(index);
-      } else {
-        // Unzoom
-        videoContainers.forEach(c => c.classList.remove("zoomed"));
-        videoFrames.forEach(frame => frame.style.pointerEvents = "auto");
-        unmuteAllVideos();
-      }
-    });
-  });
-});
-
-function muteAllVideosExcept(index) {
-  const iframes = document.querySelectorAll("iframe");
-  iframes.forEach((iframe, i) => {
-    if (i !== index) {
-      iframe.contentWindow.postMessage("mute", "*"); // Mute other videos
+    const videoUrls = [
+      document.getElementById("videoUrl1").value,
+      document.getElementById("videoUrl2").value,
+      document.getElementById("videoUrl3").value,
+      document.getElementById("videoUrl4").value
+    ];
+  
+    for (let i = 1; i <= 4; i++) {
+      const iframe = document.createElement("iframe");
+      iframe.src = generateEmbedUrl(videoUrls[i - 1]);
+      iframe.setAttribute("allowfullscreen", "");
+      document.getElementById(`video${i}`).innerHTML = "";
+      document.getElementById(`video${i}`).appendChild(iframe);
     }
   });
-}
-
-function unmuteAllVideos() {
-  const iframes = document.querySelectorAll("iframe");
-  iframes.forEach(iframe => {
-    iframe.contentWindow.postMessage("unmute", "*"); // Unmute all videos
-  });
-}
+  
+  function generateEmbedUrl(url) {
+    // Extract the video ID from the YouTube URL
+    const videoId = getYouTubeVideoId(url);
+    // Construct the embed URL
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  
+  function getYouTubeVideoId(url) {
+    const regex = /[?&]v=([^&#]*)/;
+    const match = regex.exec(url);
+    return match && match[1];
+  }
+  
