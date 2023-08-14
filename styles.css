@@ -36,17 +36,3 @@ body {
     margin: 20px auto;
   }
   
-  .video-container {
-    /* ... (existing styles) */
-    transition: width 0.5s, height 0.5s; /* Add transition for smooth zoom effect */
-  }
-  
-  .video-container.zoomed {
-    width: 80%;
-    height: 80%;
-    position: fixed;
-    top: 10%;
-    left: 10%;
-    z-index: 100;
-  }
-  
